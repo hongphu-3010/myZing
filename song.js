@@ -25,7 +25,7 @@ const app = {
       name: "Click Pow Get Down",
       singer: "Raftaar x Fortnite",
       // path: "https://mp3.vlcmusic.com/download.php?track_id=34737&format=320",
-      path: "./song/song1.mp3",
+      path: "http://api.mp3.zing.vn/api/streaming/audio/ZZDI9B7U/320",
       image: "https://i.ytimg.com/vi/jTLhQf5KJSc/maxresdefault.jpg",
     },
     {
