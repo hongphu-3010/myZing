@@ -12,62 +12,84 @@ const btnBack = $(".btn-prev i");
 const random = $(".btn-random i");
 const btnRepeat = $(".btn-repeat");
 const playlist = $(".playlist");
+const volumeSong = $(".volume__range");
+const volumeImg = $(".volume__img");
+const volume__unmute = $(".volume__unmute");
 const app = {
   currentIndex: 0,
   isPause: false,
   isRandom: false,
   isRepeat: false,
+  isVolume: false,
+  isUnmute: false,
   config: {},
+  songsRandom: [],
   // (1/2) Uncomment the line below to use localStorage
   // config: JSON.parse(localStorage.getItem(PlAYER_STORAGE_KEY)) || {},
   songs: [
+    // {
+    //   name: "Click Pow Get Down",
+    //   singer: "Raftaar x Fortnite",
+    //   // path: "https://mp3.vlcmusic.com/download.php?track_id=34737&format=320",
+    //   path: "http://api.mp3.zing.vn/api/streaming/audio/ZZDI9B7U/320",
+    //   image:
+    //     "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_webp/cover/1/b/8/9/1b8958017b04a663eb8c093905dd4d85.jpg",
+    // },
     {
-      name: "Click Pow Get Down",
-      singer: "Raftaar x Fortnite",
+      name: "Dancing With Your Ghost",
+      singer: "Sasha Sloan",
       // path: "https://mp3.vlcmusic.com/download.php?track_id=34737&format=320",
-      path: "http://api.mp3.zing.vn/api/streaming/audio/ZZDI9B7U/320",
-      image: "https://i.ytimg.com/vi/jTLhQf5KJSc/maxresdefault.jpg",
+      path: "./song/song1.mp3",
+      image:
+        "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_webp/cover/e/1/3/6/e136efdb83afc28eefac02e8d0184cf1.jpg",
     },
     {
-      name: "Tu Phir Se Aana",
-      singer: "Raftaar x Salim Merchant x Karma",
+      name: "Send My Love",
+      singer: "Sofia",
       path: "./song/song2.mp3",
       image:
-        "https://1.bp.blogspot.com/-kX21dGUuTdM/X85ij1SBeEI/AAAAAAAAKK4/feboCtDKkls19cZw3glZWRdJ6J8alCm-gCNcBGAsYHQ/s16000/Tu%2BAana%2BPhir%2BSe%2BRap%2BSong%2BLyrics%2BBy%2BRaftaar.jpg",
+        "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_webp/cover/4/f/2/d/4f2d26a919af2aadc65aaba9c72e68c7.jpg",
     },
     {
-      name: "Naachne Ka Shaunq",
-      singer: "Raftaar x Brobha V",
-      path: "https://mp3.filmysongs.in/download.php?id=Naachne Ka Shaunq Raftaar Ft Brodha V Mp3 Hindi Song Filmysongs.co.mp3",
+      name: "I Love You 3000",
+      singer: "Raftaar x Fortnite",
+      // path: "https://mp3.vlcmusic.com/download.php?track_id=34737&format=320",
+      path: "./song/song3.mp3",
       image: "https://i.ytimg.com/vi/QvswgfLDuPg/maxresdefault.jpg",
     },
+    // {
+    //   name: "Naachne Ka Shaunq",
+    //   singer: "Raftaar x Brobha V",
+    //   path: "https://mp3.filmysongs.in/download.php?id=Naachne Ka Shaunq Raftaar Ft Brodha V Mp3 Hindi Song Filmysongs.co.mp3",
+    //   image: "https://i.ytimg.com/vi/QvswgfLDuPg/maxresdefault.jpg",
+    // },
     {
-      name: "Mantoiyat",
-      singer: "Raftaar x Nawazuddin Siddiqui",
-      path: "https://mp3.vlcmusic.com/download.php?track_id=14448&format=320",
+      name: "Landslide",
+      singer: "Oh Wonder",
+      path: "./song/song4.mp3",
       image:
         "https://a10.gaanacdn.com/images/song/39/24225939/crop_480x480_1536749130.jpg",
     },
     {
-      name: "Aage Chal",
-      singer: "Raftaar",
-      path: "https://mp3.vlcmusic.com/download.php?track_id=25791&format=320",
+      name: "Wake Me Up",
+      singer: "Avicii",
+      path: "./song/song5.mp3",
       image:
         "https://a10.gaanacdn.com/images/albums/72/3019572/crop_480x480_3019572.jpg",
     },
     {
-      name: "Damn",
-      singer: "Raftaar x kr$na",
-      path: "https://mp3.filmisongs.com/go.php?id=Damn%20Song%20Raftaar%20Ft%20KrSNa.mp3",
+      name: "Unstoppable",
+      singer: "Sia",
+      path: "./song/song6.mp3",
       image:
-        "https://filmisongs.xyz/wp-content/uploads/2020/07/Damn-Song-Raftaar-KrNa.jpg",
+        "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_webp/cover/6/3/8/8/638880effc370826ad9b12da417b631d.jpg",
     },
     {
-      name: "Feeling You",
-      singer: "Raftaar x Harjas",
-      path: "https://mp3.vlcmusic.com/download.php?track_id=27145&format=320",
+      name: "Save Me",
+      singer: "DEAMN",
+      path: "./song/song7.mp3",
       image:
-        "https://a10.gaanacdn.com/gn_img/albums/YoEWlabzXB/oEWlj5gYKz/size_xxl_1586752323.webp",
+        "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_webp/covers/3/9/39247dd8f7a4a85f35647cf2d43d82ea_1487647777.jpg",
     },
   ],
   render: function () {
@@ -94,14 +116,15 @@ const app = {
     $$(".song").forEach((song) => {
       if (Number(song.dataset.in) !== this.currentIndex) {
         song.classList.remove("active");
-        console.log(12);
       } else {
         song.classList.add("active");
+        // if (this.currentIndex >= 4) {
         song.scrollIntoView({
           behavior: "smooth",
-          block: "center",
+          block: "end",
           inline: "nearest",
         });
+        // }
       }
     });
   },
@@ -159,16 +182,27 @@ const app = {
         progress.value = percent;
       }
     };
+    // Xử lý khi thay đổi âm lượng
+    // audio.onvolumechange = function () {
+    //   //   setTimeout(() => {
+    //   //     volumeImg.onclick();
+    //   //   }, 3000);
+    //   //   // volumeImg.onclick();
+    // };
     // Xử lý khi tua bài hát
     progress.oninput = function (e) {
       audio.currentTime = (e.target.value * audio.duration) / 100;
+    };
+    // Xử lý nút volume
+    volumeSong.oninput = function (e) {
+      audio.volume = e.target.value / e.target.max;
     };
     // Xử lý khi bấm next bài hát
     btnNext.onclick = function () {
       if (_this.isRandom) {
         _this.randomSong();
-      }
-      if (_this.isRepeat) {
+        console.log(_this.songsRandom);
+      } else if (_this.isRepeat) {
         _this.loadCurrentSong();
       } else {
         _this.nextSong();
@@ -205,20 +239,40 @@ const app = {
       this.classList.toggle("active", _this.isRepeat);
     };
     playlist.onclick = function (e) {
-      console.log(e.target.closest(".song"));
       if (
         Number(e.target.closest(".song").dataset.in) === _this.currentIndex ||
         e.target.closest(".fas")
       ) {
-        console.log(e.target.closest(".fas"));
         return;
       } else {
         _this.currentIndex = Number(e.target.closest(".song").dataset.in);
-        console.log(_this.currentIndex);
         _this.loadCurrentSong();
         audio.play();
         _this.checkSongUi();
-        console.log(e.target.className);
+      }
+    };
+    volumeImg.onclick = function () {
+      _this.isVolume = !_this.isVolume;
+      if (_this.isVolume) {
+        volumeSong.style.display = "block";
+        volumeSong.style.animation = "appear linear 2s";
+        console.log(1);
+      } else {
+        volumeSong.style.animation = "hiden linear 2s forwards";
+        // setTimeout(() => {
+        volumeSong.style.display = "none";
+        console.log(2);
+        // }, 3000);
+      }
+    };
+    volume__unmute.onclick = function () {
+      _this.isUnmute = !_this.isUnmute;
+      if (_this.isUnmute) {
+        volume__unmute.src = "./imgs/mute.png";
+        audio.muted = true;
+      } else {
+        volume__unmute.src = "./imgs/unmute.png";
+        audio.muted = false;
       }
     };
   },
@@ -239,10 +293,17 @@ const app = {
   },
   randomSong: function () {
     let newIndex;
+    let numberSong;
     do {
       newIndex = Math.floor(Math.random() * this.songs.length);
-    } while (newIndex === this.currentIndex);
+      numberSong = this.songsRandom.some((number) => {
+        return newIndex === number;
+      });
+    } while (numberSong || newIndex === this.currentIndex);
     this.currentIndex = newIndex;
+    this.songsRandom.push(this.currentIndex);
+    console.log(this.currentIndex);
+    if (this.songsRandom.length > this.songs.length - 1) this.songsRandom = [];
     this.loadCurrentSong();
   },
   //   repeatSong: function() {
